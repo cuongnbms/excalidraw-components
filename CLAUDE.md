@@ -1,51 +1,93 @@
-This is a great aesthetic to aim for. The "hand-drawn" architectural style is perfect for system design diagrams because it feels approachable and clean.
+# Excalidraw Component Generation Guidelines
+
+Hand-drawn architectural style for system design diagrams - approachable, clean, and professional.
 
 ---
 
-## Agentic Coding Rules: Excalidraw Component Generation
+## 1. Structural Composition
 
-### 1. Structural Composition
+Every component follows a **three-layer hierarchy**:
 
-Every component must follow a strict three-layer hierarchy:
+* **Container:** A single `rectangle` with dark stroke (`#1e1e1e`), rounded corners, and **full background fill** - no inner padding rectangle.
+* **Visual Elements:** Icons, shapes, or message boxes centered inside with visual indicators:
+  * **Flow arrow** (`→`) for standard queues
+  * **X mark** for dead letter / failed message queues
+  * **Color coding** for priority queues (red=high, orange=medium, green=low)
+* **Label:** Multi-line `text` below the container:
+  * Line 1: Component name (e.g., "Message Queue")
+  * Line 2: Type/variant description (e.g., "FIFO / Priority")
 
-* **The Container:** A `rectangle` element with rounded corners acting as the boundary.
-* **The Visual Center:** An `icon`, `inner drawing`, or `shape` (like the orange squares in the reference) placed precisely in the horizontal and vertical center of the container.
-* **The Label:** A `text` element placed directly below the container, centered horizontally.
+## 2. Visual Style & "Roughness"
 
-### 2. Visual Style & "Roughness"
+Apply these properties for hand-drawn aesthetic:
 
-To match the hand-drawn aesthetic of the reference image, apply these properties to all generated elements:
+| Property | Container | Icons/Shapes | Text |
+|----------|-----------|--------------|------|
+| Roughness | `1` | `1` | `0` |
+| Stroke Width | `2` | `1.5` | - |
+| Fill Style | `solid` | `solid` | - |
+| Font Family | - | - | `1` (hand-drawn) |
 
-* **Roughness:** Set to `1` or `2` (avoid `0` to keep the "hand-drawn" feel).
-* **Stroke Width:** Use `2` for containers and `1.5` for internal icons.
-* **Stroke Sharpness:** Always set to `round`.
-* **Fill Style:** Use `solid` or `hachure` for internal elements (like the orange boxes) to create contrast against the background.
-* **Font Family:** Use `1` (Excalidraw’s default hand-drawn font).
+## 3. Layout Constants
 
-### 3. Layout Constants (Spacing & Alignment)
+* **Container Size:** `140x60` for queue-type components
+* **Icon Padding:** `12px` from container edge to icons
+* **Icon Size:** `24x24` squares with `4px` gap between them
+* **Label Gap:** `12px` below container bottom
+* **Line Spacing:** `24px` between label lines
 
-Maintain consistency across all components:
+## 4. Color Palette
 
-* **Padding:** Ensure a minimum internal padding of `20px` between the container border and the inner icon.
-* **Label Gap:** The text label should be positioned `10px` to `15px` below the bottom edge of the container.
-* **Grouping:** Always wrap the container, inner icon, and text label into a single `group` in the Excalidraw JSON to allow for easy moving/scaling.
+### Queue Variants
+| Variant | Background | Icon Colors | Indicator |
+|---------|------------|-------------|-----------|
+| Message Queue | `#ffd8a8` (peach) | `#e8590c` (orange) | Arrow `→` |
+| Dead Letter Queue | `#868e96` (gray) | `#343a40` (dark gray) | X mark |
+| Priority Queue | `#ffc078` (orange) | `#e03131` red, `#f76707` orange, `#2f9e44` green | Color bands |
 
-### 4. Color Palette
+### Visual Indicators
+| Indicator | Usage | Color |
+|-----------|-------|-------|
+| Flow Arrow | Standard queue output | `#495057` |
+| X Mark | Failed/rejected messages | `#f8f9fa` (white) |
+| Priority Colors | High/Medium/Low priority | Red → Orange → Green |
 
-Unless specified otherwise, use a professional, muted palette:
+## 5. File Organization
 
-* **Container Stroke:** `#000000` (Black).
-* **Inner Icon Fill:** Use a distinct accent color (e.g., `#ff922b` for orange or `#4dabf7` for blue) to highlight functionality.
-* **Text:** `#000000` (Black).
+* Save all variations in single file: `<component>.excalidraw`
+* Group all elements per component variant
+* Use descriptive group IDs: `queue-fifo-group`, `queue-dlq-group`, `queue-priority-group`
 
-Each component creates several different variations, all in a single file named `<component>.excalidraw`
+## 6. Component Templates
 
-### Suggested Component Templates
+### Message Queue (FIFO / Priority)
+```
+[Rectangle: 140x60, stroke #1e1e1e, fill #ffd8a8]
+  └─[Box 1: 24x24, fill #e8590c]
+  └─[Box 2: 24x24, fill #e8590c]
+  └─[Box 3: 24x24, fill #e8590c]
+  └─[Box 4: 24x24, fill #e8590c]
+  └─[Arrow: →, stroke #495057]
+[Text: "Message Queue"]
+[Text: "FIFO / Priority"]
+```
 
-You can ask the agent to create specific components based on these rules, such as:
+### Dead Letter Queue
+```
+[Rectangle: 140x60, stroke #1e1e1e, fill #868e96]
+  └─[Box 1: 24x24, fill #343a40]
+  └─[Box 2: 24x24, fill #343a40]
+  └─[Box 3: 24x24, fill #343a40 + X mark]
+[Text: "Dead Letter Queue"]
+[Text: "Failed Messages"]
+```
 
-* **Database:** Cylinder icon centered in a rectangle + "PostgreSQL" text.
-* **Cache:** Lightning bolt icon centered in a rectangle + "Redis" text.
-* **API Gateway:** Door/Proxy icon centered in a rectangle + "Gateway" text.
-
-Would you like me to generate a sample **JSON structure** for one of these components that you can import directly into Excalidraw?
+### Priority Queue
+```
+[Rectangle: 140x60, stroke #1e1e1e, fill #ffc078]
+  └─[Box 1: 24x24, fill #e03131 (high)]
+  └─[Box 2: 24x24, fill #f76707 (medium)]
+  └─[Box 3: 24x24, fill #2f9e44 (low)]
+[Text: "Priority Queue"]
+[Text: "High → Low"]
+```
