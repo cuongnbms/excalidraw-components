@@ -13,6 +13,7 @@ Reusable Excalidraw component library for system design diagrams.
 | `gateway.excalidraw` | API Gateway, Authentication, Rate Limiting |
 | `loadbalancer.excalidraw` | Load Balancer variants |
 | `queue.excalidraw` | Message Queue, Kafka, RabbitMQ |
+| `vault.excalidraw` | Vault, Key, Lock, Secrets, Certificate, Shield |
 
 ## Usage
 
@@ -29,6 +30,7 @@ system-design/
   gateway.excalidraw     # API gateways, auth
   loadbalancer.excalidraw # Traffic distribution
   queue.excalidraw       # Message queues, streaming
+  vault.excalidraw       # Security: secrets, keys, certs
 ```
 
 ## Style Guide
